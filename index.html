@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USM Freshie Quiz | Capybara 学长 🦫</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --usm-blue: #174a9c;
+            --usm-blue-dark: #0f3472;
+            --usm-blue-light: #eaf2ff;
+            --capybara: #a8754f;
+            --yellow: #ffd85a;
+            --background: #f7f9fc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #e5eaf1;
+            --shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+            --radius: 20px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: "Inter", sans-serif;
+            background: linear-gradient(135deg, var(--usm-blue-dark), var(--usm-blue));
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: var(--card);
+            width: 100%;
+            max-width: 600px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emoji-header { font-size: 50px; margin-bottom: 10px; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        h1 { font-size: 24px; color: var(--usm-blue-dark); margin-bottom: 10px; font-weight: 800; }
+        p { color: #64748b; font-size: 14px; margin-bottom: 25px; line-height: 1.6; }
+
+        input[type="text"] {
+            width: 100%; padding: 15px; border: 2px solid var(--border); border-radius: 12px;
+            font-size: 16px; margin-bottom: 20px; outline: none; text-align: center; transition: 0.3s;
+        }
+        input[type="text"]:focus { border-color: var(--usm-blue); }
+
+        button {
+            background: var(--usm-blue); color: white; border: none; padding: 15px 30px;
+            border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer;
+            width: 100%; transition: 0.2s;
+        }
+        button:hover { background: var(--usm-blue-dark); transform: translateY(-2px); }
+        button:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; }
+
+        .option-btn {
+            background: var(--background); color: var(--text); border: 2px solid var(--border);
+            margin-bottom: 10px; padding: 15px; text-align: left;
+        }
+        .option-btn:hover { background: var(--usm-blue-light); border-color: var(--usm-blue); color: var(--usm-blue); }
+        .option-btn.correct { background: #dcfce7; border-color: #22c55e; color: #166534; }
+        .option-btn.wrong { background: #fee2e2; border-color: #ef4444; color: #991b1b; }
+
+        .screen { display: none; }
+        .screen.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .progress-text { font-size: 13px; font-weight: 600; color: var(--usm-blue); margin-bottom: 15px; display: block; }
+        
+        .leaderboard-list { text-align: left; margin-top: 25px; margin-bottom: 20px; }
+        .leaderboard-item {
+            display: flex; justify-content: space-between; padding: 12px 15px;
+            border-bottom: 1px solid var(--border); font-size: 14px;
+        }
+        .leaderboard-item:nth-child(2) { background: #fffbeb; font-weight: 800; color: #b45309; border-radius: 8px; border: none; margin-bottom: 5px; }
+        .leaderboard-item:nth-child(3) { background: #f1f5f9; font-weight: 700; color: #475569; border-radius: 8px; border: none; margin-bottom: 5px; }
+        .leaderboard-item:nth-child(4) { background: #fff0f4; font-weight: 700; color: #9f1239; border-radius: 8px; border: none; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="quiz-container">
+        
+        <!-- Screen 1: Start -->
+        <div id="start-screen" class="screen active">
+            <div class="emoji-header">🦫</div>
+            <h1 id="welcome-title">USM 26/27 Freshie Quiz</h1>
+            <p id="welcome-desc">Test your campus knowledge! Are you ready to survive your first year at Universiti Sains Malaysia?</p>
+            
+            <div id="start-form">
+                <input type="text" id="username" placeholder="Enter your name" autocomplete="off">
+                <button onclick="startQuiz()">Start Quiz ✨</button>
+            </div>
+        </div>
+
+        <!-- Screen 2: Quiz -->
+        <div id="quiz-screen" class="screen">
+            <span class="progress-text" id="progress">Question 1 of 40</span>
+            <h1 id="question-text" style="font-size: 18px; line-height: 1.4;">Question goes here?</h1>
+            <div id="options-container" style="margin-top: 20px;"></div>
+        </div>
+
+        <!-- Screen 3: Results -->
+        <div id="result-screen" class="screen">
+            <div class="emoji-header">🏆</div>
+            <h1 id="final-score">You scored 0/40!</h1>
+            <p id="feedback-text">Good try! Time to reread the FAQ! 📖</p>
+
+            <div class="leaderboard-list" id="leaderboard-container">
+                <!-- Leaderboard items injected here from Google Sheets -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. GOOGLE APPS SCRIPT WEB APP URL
+        // ==========================================
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbzoLPWjDhdODYGUfCM7dMHY3C23UioOUmbTcKVgMFx_5V1H2w6mICAbza8WnQ3yymbMTg/exec';
+
+        // ==========================================
+        // 2. 40 QUESTIONS DATABASE
+        // ==========================================
+        const questions = [
+            { q: "What is the deadline to accept or reject the USM offer?", options: ["23 August 2026", "9 September 2026", "1 October 2026", "31 August 2026"], answer: 0 },
+            { q: "Which bank account is mandatory to open for your Kad Siswa?", options: ["Maybank", "CIMB", "RHB Pro Savings Account-i", "Bank Islam"], answer: 2 },
+            { q: "What is the deadline to upload your Kad Siswa photo?", options: ["23 August 2026", "9 September 2026", "30 September 2026", "1 October 2026"], answer: 1 },
+            { q: "Which app must you register on to unblock Campus Online and claim the Celik MADANI incentive?", options: ["myPTPTN", "myASNB", "CampusOnline App", "RHB Mobile"], answer: 1 },
+            { q: "How many digits must your ASNB UHID code be?", options: ["10", "11", "12", "14"], answer: 2 },
+            { q: "Are regular undergraduate students allowed to bring cars to campus?", options: ["Yes, if they register", "Only on weekends", "Yes, with a sticker", "No, it is strictly prohibited"], answer: 3 },
+            { q: "What is the minimum deposit required to activate an SSPN Prime account?", options: ["RM10", "RM20", "RM50", "RM100"], answer: 1 },
+            { q: "By what date must you confirm your Desasiswa (hostel) placement?", options: ["23 August 2026", "31 August 2026", "9 September 2026", "1 October 2026"], answer: 2 },
+            { q: "What happens if you skip a final exam without a valid reason?", options: ["You retake it in KSCP", "Grade 'X'", "Grade 'F*'", "Grade 'C-'"], answer: 2 },
+            { q: "If you get a 'C' grade, are you allowed to retake it during KSCP?", options: ["Yes", "Only if CGPA is low", "No", "Yes, with Dean's approval"], answer: 2 },
+            { q: "What is the fee to submit your PTPTN Agreement online?", options: ["RM10.00", "RM15.00", "RM25.00", "Free"], answer: 2 },
+            { q: "What is the name of the official WiFi network for USM students?", options: ["USM WiFi", "USM Student", "USM Secure", "CampusOnline"], answer: 2 },
+            { q: "What should you do if you see 'Activation Pending' on Campus Online before checking in?", options: ["Call IT immediately", "Register again", "Wait until physical check-in", "Email the Dean"], answer: 2 },
+            { q: "Are undergraduate students allowed to wear slippers to lecture halls?", options: ["Yes", "Only on Fridays", "Yes, if it rains", "No"], answer: 3 },
+            { q: "Which application is required to check your SSPN account number?", options: ["myASNB", "myPTPTN", "CampusOnline", "RHB App"], answer: 1 },
+            { q: "How many times per semester can you visit a USM-appointed external panel clinic for free?", options: ["3 times", "4 times", "6 times", "Unlimited"], answer: 2 },
+            { q: "What percentage of the Desasiswa Hostel merit calculation is based on MyCSD achievements?", options: ["50%", "70%", "80%", "90%"], answer: 3 },
+            { q: "What does the 'H' in the H.E.B.A.T Agenda stand for?", options: ["Harmony", "Holistic", "Honor", "Humanity"], answer: 1 },
+            { q: "Which student workspace platform is recommended for tracking MyCSD events?", options: ["Makerpreneur (StudentHub USM)", "CampusOnline", "E-Daftar", "Pohon@USM"], answer: 0 },
+            { q: "Can Year 1 Semester 1 students apply for non-packaged co-curricular courses?", options: ["Yes", "No, only Packaged Ko-K", "Only Sports", "Yes, with permission"], answer: 1 },
+            { q: "What is the minimum passing grade for University Courses (U-Courses)?", options: ["Grade D", "Grade C-", "Grade C", "Grade B-"], answer: 2 },
+            { q: "If you miss an exam due to illness, how long do you have to submit your medical certificate?", options: ["24 hours", "48 hours", "72 hours", "1 week"], answer: 1 },
+            { q: "Does a 'Unit Exemption' affect your final CGPA?", options: ["Yes", "No", "Only for core subjects", "Only if grade is A"], answer: 1 },
+            { q: "Does a 'Credit Transfer' from another IPTA affect your CGPA?", options: ["Yes", "No", "Only for minors", "Only if it is a U-Course"], answer: 0 },
+            { q: "What is the maximum duration of the KSCP (Long Vacation Semester)?", options: ["2 weeks", "3 weeks", "4 weeks", "5 weeks"], answer: 1 },
+            { q: "What happens if a student remains on Probation (P1, P2) for three consecutive semesters?", options: ["Warning letter", "Suspended for 1 semester", "Dismissed (Fail Out)", "Forced to change major"], answer: 2 },
+            { q: "What is the fee to apply for a final exam result re-check?", options: ["RM10 per paper", "RM25 per paper", "RM50 per paper", "Free"], answer: 2 },
+            { q: "How many units of Type U English courses must you accumulate to graduate?", options: ["2 units", "4 units", "6 units", "8 units"], answer: 1 },
+            { q: "What grade will you get if you are barred from an exam due to low attendance?", options: ["F", "F*", "X", "DK"], answer: 2 },
+            { q: "Which campus bus route connects RST to the Main Campus?", options: ["Route A", "Route B", "Route C", "Route E"], answer: 3 },
+            { q: "Where do male students of Desasiswa Tekun collect their room keys?", options: ["M05 Parking Area", "Cafeteria Tekun M09", "Block L05", "Dataran Usahawan"], answer: 0 },
+            { q: "Which block is the Premium Hostel for male students in Desasiswa Tekun?", options: ["M01", "M03", "M05", "M07"], answer: 2 },
+            { q: "Where is the key collection point for Desasiswa Restu (Male)?", options: ["Block K09", "Ground floor of Block M01", "Block L06", "Block M05"], answer: 1 },
+            { q: "What is the monthly rate for a Premium Single Room in Desasiswa Saujana (M04)?", options: ["RM 210", "RM 300", "RM 510", "RM 540"], answer: 3 },
+            { q: "In the course code format (e.g., CPT111), what does the letter 'C' stand for?", options: ["Chemical Sciences", "Computer Sciences", "Communication", "Educational Studies"], answer: 1 },
+            { q: "Which school uses the letter 'H' at the beginning of its course codes?", options: ["Humanities", "Housing, Building & Planning", "Health Sciences", "History"], answer: 0 },
+            { q: "If a course code starts with 'Z' (e.g., ZCT 104/3), which school offers it?", options: ["Mathematical Sciences", "Social Sciences", "Physics", "The Arts"], answer: 2 },
+            { q: "Which letter represents the School of Management in course codes?", options: ["M", "A", "P", "S"], answer: 1 },
+            { q: "Which of the following is an official Desasiswa (Hostel) at the USM Main Campus?", options: ["Lembaran", "Murni", "Indah Kembara", "Jaya"], answer: 2 },
+            { q: "What does the letter 'L' stand for in a course code?", options: ["Languages & Translation", "Literature", "Law", "Logistics"], answer: 0 }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let playerName = "";
+
+        // ==========================================
+        // 3. ONE-ATTEMPT LOGIC
+        // ==========================================
+        window.onload = function() {
+            if (localStorage.getItem("capyQuizFinished") === "true") {
+                document.getElementById("final-score").textContent = "Quiz Completed! ✅";
+                document.getElementById("feedback-text").textContent = "You have already submitted your score. Here is the Top 10 Scores!";
+                fetchLeaderboard();
+                switchScreen('result-screen');
+            }
+        };
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startQuiz() {
+            if (localStorage.getItem("capyQuizFinished") === "true") {
+                alert("You have already taken the quiz!");
+                return;
+            }
+            const nameInput = document.getElementById("username").value.trim();
+            if (!nameInput) { alert("Please enter your name first! 🦫"); return; }
+            playerName = nameInput;
+            score = 0;
+            currentQuestionIndex = 0;
+            loadQuestion();
+            switchScreen('quiz-screen');
+        }
+
+        function loadQuestion() {
+            const q = questions[currentQuestionIndex];
+            document.getElementById("progress").textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            document.getElementById("question-text").textContent = q.q;
+            
+            const optionsContainer = document.getElementById("options-container");
+            optionsContainer.innerHTML = "";
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement("button");
+                btn.className = "option-btn";
+                btn.textContent = opt;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btn) {
+            const correctIndex = questions[currentQuestionIndex].answer;
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+            
+            if (selectedIndex === correctIndex) {
+                btn.classList.add("correct");
+                score++;
+            } else {
+                btn.classList.add("wrong");
+                allBtns[correctIndex].classList.add("correct");
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function endQuiz() {
+            document.getElementById("final-score").textContent = `You scored ${score} / ${questions.length}!`;
+            document.getElementById("feedback-text").textContent = score >= 35 
+                ? "Amazing! You are officially a USM expert! 🎓" 
+                : "Good try! Time to reread the FAQ! 📖";
+            
+            localStorage.setItem("capyQuizFinished", "true");
+            
+            // Show loading text
+            document.getElementById("leaderboard-container").innerHTML = "<p style='color: var(--text-light);'>Saving your score and loading Top 10 Scores... ⏳</p>";
+            switchScreen('result-screen');
+
+            // Send score to Google Sheets
+            sendToGoogleSheets(playerName, score);
+            
+            // Wait 2 seconds for Google to process the row, then fetch the Top 10
+            setTimeout(fetchLeaderboard, 2000);
+        }
+
+        // ==========================================
+        // 4. GOOGLE SHEETS API (POST & GET)
+        // ==========================================
+        function sendToGoogleSheets(name, score) {
+            const formData = new FormData();
+            formData.append("name", name);
+            formData.append("score", score);
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            }).catch(error => console.error("Error saving score", error));
+        }
+
+        function fetchLeaderboard() {
+            const container = document.getElementById("leaderboard-container");
+            
+            fetch(scriptURL)
+                .then(response => response.json())
+                .then(data => {
+                    container.innerHTML = "<h3 style='margin-bottom:10px; color: var(--usm-blue-dark);'>🌟 The Top 10 Ultimate Capy Freshies!</h3>";
+                    
+                    if (!data || data.length === 0) {
+                        container.innerHTML += "<p>No records found yet!</p>";
+                        return;
+                    }
+
+                    data.forEach((record, index) => {
+                        let medal = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : `${index + 1}.`;
+                        container.innerHTML += `
+                            <div class="leaderboard-item">
+                                <span>${medal} ${record.name}</span>
+                                <span><strong>${record.score}</strong> pts</span>
+                            </div>
+                        `;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching leaderboard:", error);
+                    container.innerHTML = "<p>Leaderboard currently unavailable. 🦫</p>";
+                });
+        }
+    </script>
+</body>
+</html>
