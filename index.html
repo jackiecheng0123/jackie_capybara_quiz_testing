@@ -132,49 +132,51 @@
         const scriptURL = 'https://script.google.com/macros/s/AKfycbzoLPWjDhdODYGUfCM7dMHY3C23UioOUmbTcKVgMFx_5V1H2w6mICAbza8WnQ3yymbMTg/exec';
 
         // ==========================================
-        // 2. 40 QUESTIONS DATABASE
+        // 2. 40 QUESTIONS DATABASE (UPDATED)
         // ==========================================
         const questions = [
             { q: "What is the deadline to accept or reject the USM offer?", options: ["23 August 2026", "9 September 2026", "1 October 2026", "31 August 2026"], answer: 0 },
             { q: "Which bank account is mandatory to open for your Kad Siswa?", options: ["Maybank", "CIMB", "RHB Pro Savings Account-i", "Bank Islam"], answer: 2 },
             { q: "What is the deadline to upload your Kad Siswa photo?", options: ["23 August 2026", "9 September 2026", "30 September 2026", "1 October 2026"], answer: 1 },
-            { q: "Which app must you register on to unblock Campus Online and claim the Celik MADANI incentive?", options: ["myPTPTN", "myASNB", "CampusOnline App", "RHB Mobile"], answer: 1 },
-            { q: "How many digits must your ASNB UHID code be?", options: ["10", "11", "12", "14"], answer: 2 },
             { q: "Are regular undergraduate students allowed to bring cars to campus?", options: ["Yes, if they register", "Only on weekends", "Yes, with a sticker", "No, it is strictly prohibited"], answer: 3 },
             { q: "What is the minimum deposit required to activate an SSPN Prime account?", options: ["RM10", "RM20", "RM50", "RM100"], answer: 1 },
             { q: "By what date must you confirm your Desasiswa (hostel) placement?", options: ["23 August 2026", "31 August 2026", "9 September 2026", "1 October 2026"], answer: 2 },
             { q: "What happens if you skip a final exam without a valid reason?", options: ["You retake it in KSCP", "Grade 'X'", "Grade 'F*'", "Grade 'C-'"], answer: 2 },
-            { q: "If you get a 'C' grade, are you allowed to retake it during KSCP?", options: ["Yes", "Only if CGPA is low", "No", "Yes, with Dean's approval"], answer: 2 },
             { q: "What is the fee to submit your PTPTN Agreement online?", options: ["RM10.00", "RM15.00", "RM25.00", "Free"], answer: 2 },
             { q: "What is the name of the official WiFi network for USM students?", options: ["USM WiFi", "USM Student", "USM Secure", "CampusOnline"], answer: 2 },
             { q: "What should you do if you see 'Activation Pending' on Campus Online before checking in?", options: ["Call IT immediately", "Register again", "Wait until physical check-in", "Email the Dean"], answer: 2 },
-            { q: "Are undergraduate students allowed to wear slippers to lecture halls?", options: ["Yes", "Only on Fridays", "Yes, if it rains", "No"], answer: 3 },
+            { q: "Are undergraduate students allowed to wear slippers to official events or offices?", options: ["Yes", "Only if it rains", "Only on Fridays", "No"], answer: 3 },
             { q: "Which application is required to check your SSPN account number?", options: ["myASNB", "myPTPTN", "CampusOnline", "RHB App"], answer: 1 },
             { q: "How many times per semester can you visit a USM-appointed external panel clinic for free?", options: ["3 times", "4 times", "6 times", "Unlimited"], answer: 2 },
             { q: "What percentage of the Desasiswa Hostel merit calculation is based on MyCSD achievements?", options: ["50%", "70%", "80%", "90%"], answer: 3 },
             { q: "What does the 'H' in the H.E.B.A.T Agenda stand for?", options: ["Harmony", "Holistic", "Honor", "Humanity"], answer: 1 },
-            { q: "Which student workspace platform is recommended for tracking MyCSD events?", options: ["Makerpreneur (StudentHub USM)", "CampusOnline", "E-Daftar", "Pohon@USM"], answer: 0 },
-            { q: "Can Year 1 Semester 1 students apply for non-packaged co-curricular courses?", options: ["Yes", "No, only Packaged Ko-K", "Only Sports", "Yes, with permission"], answer: 1 },
             { q: "What is the minimum passing grade for University Courses (U-Courses)?", options: ["Grade D", "Grade C-", "Grade C", "Grade B-"], answer: 2 },
             { q: "If you miss an exam due to illness, how long do you have to submit your medical certificate?", options: ["24 hours", "48 hours", "72 hours", "1 week"], answer: 1 },
-            { q: "Does a 'Unit Exemption' affect your final CGPA?", options: ["Yes", "No", "Only for core subjects", "Only if grade is A"], answer: 1 },
-            { q: "Does a 'Credit Transfer' from another IPTA affect your CGPA?", options: ["Yes", "No", "Only for minors", "Only if it is a U-Course"], answer: 0 },
-            { q: "What is the maximum duration of the KSCP (Long Vacation Semester)?", options: ["2 weeks", "3 weeks", "4 weeks", "5 weeks"], answer: 1 },
             { q: "What happens if a student remains on Probation (P1, P2) for three consecutive semesters?", options: ["Warning letter", "Suspended for 1 semester", "Dismissed (Fail Out)", "Forced to change major"], answer: 2 },
             { q: "What is the fee to apply for a final exam result re-check?", options: ["RM10 per paper", "RM25 per paper", "RM50 per paper", "Free"], answer: 2 },
             { q: "How many units of Type U English courses must you accumulate to graduate?", options: ["2 units", "4 units", "6 units", "8 units"], answer: 1 },
             { q: "What grade will you get if you are barred from an exam due to low attendance?", options: ["F", "F*", "X", "DK"], answer: 2 },
-            { q: "Which campus bus route connects RST to the Main Campus?", options: ["Route A", "Route B", "Route C", "Route E"], answer: 3 },
             { q: "Where do male students of Desasiswa Tekun collect their room keys?", options: ["M05 Parking Area", "Cafeteria Tekun M09", "Block L05", "Dataran Usahawan"], answer: 0 },
-            { q: "Which block is the Premium Hostel for male students in Desasiswa Tekun?", options: ["M01", "M03", "M05", "M07"], answer: 2 },
             { q: "Where is the key collection point for Desasiswa Restu (Male)?", options: ["Block K09", "Ground floor of Block M01", "Block L06", "Block M05"], answer: 1 },
-            { q: "What is the monthly rate for a Premium Single Room in Desasiswa Saujana (M04)?", options: ["RM 210", "RM 300", "RM 510", "RM 540"], answer: 3 },
-            { q: "In the course code format (e.g., CPT111), what does the letter 'C' stand for?", options: ["Chemical Sciences", "Computer Sciences", "Communication", "Educational Studies"], answer: 1 },
-            { q: "Which school uses the letter 'H' at the beginning of its course codes?", options: ["Humanities", "Housing, Building & Planning", "Health Sciences", "History"], answer: 0 },
-            { q: "If a course code starts with 'Z' (e.g., ZCT 104/3), which school offers it?", options: ["Mathematical Sciences", "Social Sciences", "Physics", "The Arts"], answer: 2 },
-            { q: "Which letter represents the School of Management in course codes?", options: ["M", "A", "P", "S"], answer: 1 },
+            { q: "In the course code format, what does the letter 'C' stand for?", options: ["Chemical Sciences", "Computer Sciences", "Communication", "Educational Studies"], answer: 1 },
+            { q: "If a course code starts with 'Z', which school offers it?", options: ["Mathematical Sciences", "Social Sciences", "Physics", "The Arts"], answer: 2 },
             { q: "Which of the following is an official Desasiswa (Hostel) at the USM Main Campus?", options: ["Lembaran", "Murni", "Indah Kembara", "Jaya"], answer: 2 },
-            { q: "What does the letter 'L' stand for in a course code?", options: ["Languages & Translation", "Literature", "Law", "Logistics"], answer: 0 }
+            
+            // --- THE 14 NEW QUESTIONS START HERE ---
+            { q: "What type of Co-Curricular (Ko-K) courses are Year 1 Semester 1 students allowed to register for?", options: ["Packaged only (e.g., Uniformed Bodies)", "Non-packaged only", "Both Packaged & Non-packaged", "None"], answer: 0 },
+            { q: "How many credit units do most Skill Courses (like WSU101) or a mandatory Ko-k (like WEC) carry?", options: ["1 Unit", "2 Units", "3 Units", "4 Units"], answer: 1 },
+            { q: "Which app's QR code is required to scan for entry into the USM Library?", options: ["myASNB", "CampusOnline", "Passport USM", "MyDigital ID"], answer: 2 },
+            { q: "What is the primary function of the Campus Online (E-Daftar) portal?", options: ["Ordering food to hostels", "Registering for courses and checking exam results", "Booking campus bus tickets", "Applying for PTPTN loan"], answer: 1 },
+            { q: "What type of attire is required when visiting semi-formal venues like lecture halls, exam halls, and the library?", options: ["Sport Attire", "Pyjamas", "Smart-Casual (e.g., Collared shirt & covered shoes)", "Slippers and shorts"], answer: 2 },
+            { q: "Which of the following University Courses (U-Course) is COMPULSORY for all Local Students?", options: ["LSP301", "HFE224 (Appreciation of Ethics and Civilisations)", "WSC108 (Karate)", "LHP410"], answer: 1 },
+            { q: "Starting from the 2025/2026 academic session, what is the maximum number of course units an 'Active' student can register for per semester?", options: ["18 Units", "20 Units", "22 Units", "24 Units"], answer: 1 },
+            { q: "Why must all freshies open and activate a myASNB account?", options: ["To pay for Desasiswa hostel fees", "To unblock Campus Online and claim the RM50 Celik MADANI", "To join the Dean's List", "To register for Ko-K courses"], answer: 1 },
+            { q: "If you receive the Program Siswa Sulung (B40) scholarship, are you still allowed to apply for the PTPTN loan?", options: ["Yes, you can apply for both", "No, you must choose one", "Only in your second year", "Only if your CGPA is above 3.50"], answer: 0 },
+            { q: "Can a student hold the PTPTN loan and another major scholarship (like JPA or Yayasan) at the same time?", options: ["Yes, unlimited loans allowed", "No, you can only hold one major financial aid", "Yes, but only for Science students", "Only with the Dean's secret approval"], answer: 1 },
+            { q: "Which campus bus route directly connects RST (Restu, Saujana, Tekun) to the Main Campus lecture halls?", options: ["Route A", "Route B", "Route C", "Route E"], answer: 3 },
+            { q: "Within which week MUST you drop a Co-curricular (Ko-K) course to avoid a RM50 penalty fine?", options: ["Within Week 1", "Within Week 3", "Within Week 5", "Within Week 7"], answer: 0 },
+            { q: "Which of the following electrical appliances is STRICTLY PROHIBITED in Desasiswa rooms?", options: ["Laptop charger", "Mini fan", "Hair dryer", "Multi-cooker / Slow Cooker"], answer: 3 },
+            { q: "When are students required to completely clear out their belongings from their Desasiswa rooms and return the keys?", options: ["During the 1-week Mid-Semester Break", "At the end of every semester (Long Vacation)", "Only when graduating in Year 4", "Every weekend"], answer: 1 }
         ];
 
         let currentQuestionIndex = 0;
